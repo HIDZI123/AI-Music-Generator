@@ -268,14 +268,9 @@ def main():
         described_lyrics="lyrics about breakup",
     )
     
-    headers = {
-        "Modal-Key" : "wk-ZMhCTfEEPqIhLPUdZoF4Ld",
-        "Modal-Secret" : "ws-FmMYmLMnouCSkC8FoOrvHL"
-    }
-    
     payload = request_data.model_dump()
     
-    response = requests.post(endpoint_url, json=payload, headers=headers)
+    response = requests.post(endpoint_url, json=payload)
     response.raise_for_status()
     result = GenerateMusicResponseS3(**response.json())
     print(f"{result.s3_key} {result.cover_image_s3_key} {result.categories}")
