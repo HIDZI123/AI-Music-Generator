@@ -11,15 +11,17 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-      MODAL_KEY : z.string(),
-      MODAL_SECRET : z.string(),
-      AWS_ACCESS_KEY_ID : z.string(),
-      AWS_SECRET_ACCESS_KEY : z.string(),
-      AWS_REGION : z.string(),
-      AWS_S3_BUCKET_NAME : z.string(),
-      GENERATE_WITH_LYRICS : z.string(),
-      GENERATE_FROM_DESCRIPTION : z.string(),
-      GENERATE_WITH_DESCRIBED_LYRICS : z.string(),
+    MODAL_KEY: z.string(),
+    MODAL_SECRET: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_REGION: z.string(),
+    AWS_S3_BUCKET_NAME: z.string(),
+    GENERATE_WITH_LYRICS: z.string(),
+    GENERATE_FROM_DESCRIPTION: z.string(),
+    GENERATE_WITH_DESCRIBED_LYRICS: z.string(),
+    BETTER_AUTH_SECRET: z.string(),
+    BETTER_AUTH_URL: z.string(),
   },
 
   /**
@@ -47,6 +49,9 @@ export const env = createEnv({
     GENERATE_WITH_LYRICS: process.env.GENERATE_WITH_LYRICS,
     GENERATE_FROM_DESCRIPTION: process.env.GENERATE_FROM_DESCRIPTION,
     GENERATE_WITH_DESCRIBED_LYRICS: process.env.GENERATE_WITH_DESCRIBED_LYRICS,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
