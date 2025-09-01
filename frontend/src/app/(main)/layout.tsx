@@ -2,6 +2,24 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Providers } from "~/components/providers";
+import { Toaster } from "sonner";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "~/components/ui/sidebar";
+import { AppSidebar } from "~/components/sidebar/app-sidebar";
+import { Separator } from "~/components/ui/separator";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "~/components/ui/breadcrumb";
+import BreadcrumbPageClient from "~/components/sidebar/breadcrumb-page-client";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -19,7 +37,34 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Providers>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="flex h-screen flex-col">
+              <header className="bg-background sticky-top z-10 px-4 py-2">
+                <div className="flex shrink-0 grow items-center gap-2">
+                  <SidebarTrigger className="-ml-2" />
+                  <Separator
+                    orientation="vertical"
+                    className="mr-2 bg-gray-600 data-[orientation=vertical]:h-4"
+                  />
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbPageClient />
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </div>
+              </header>
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+          <Toaster />
+        </Providers>
+      </body>
     </html>
   );
 }
