@@ -1,5 +1,3 @@
-"use server";
-
 import { User } from "lucide-react";
 import {
   Sidebar,
@@ -40,6 +38,8 @@ export async function AppSidebar() {
         </div>
         <UserButton
           variant={"outline"}
+          className="cursor-pointer"
+          size={"default"}
           additionalLinks={[
             {
               label: "Customer Portal",
