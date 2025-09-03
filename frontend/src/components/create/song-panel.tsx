@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import { Loader2, Music, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
+import { toast } from "sonner";
+import { generateSong, type GenerateRequest } from "~/actions/generation";
 
 const inspirationTags = [
   "80s synth-pop",
@@ -97,6 +99,55 @@ const SongPanel = () => {
       } else {
         setStyleInput(styleInput + ", " + style);
       }
+    }
+  };
+
+  const handleCreate = async () => {
+    if (mode === "simple" && !description.trim()) {
+      toast.error("Please describe your song before creating.");
+      return;
+    }
+
+    if (mode === "custom" && !styleInput.trim()) {
+      toast.error("Please describe your song styles before creating.");
+      return;
+    }
+
+    let requestBody: GenerateRequest;
+
+    if (mode === "simple") {
+      requestBody = {
+        fullDescribedSong: description,
+        instrumental: instrumental,
+      };
+    } else {
+      const prompt = styleInput;
+      if (lyricsMode === "auto") {
+        requestBody = {
+          prompt: prompt,
+          describedLyrics: lyrics,
+          instrumental: instrumental,
+        };
+      } else {
+        requestBody = {
+          prompt: prompt,
+          lyrics: lyrics,
+          instrumental: instrumental,
+        };
+      }
+    }
+
+    try {
+      setLoading(true);
+      await generateSong(requestBody);
+      setDescription("");
+      setLyrics("");
+      setStyleInput("");
+    } catch (e) {
+      toast.error("Failed to Generate Song");
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -264,7 +315,12 @@ const SongPanel = () => {
       </div>
 
       <div className="border-t p-4">
-        <Button className="w-full cursor-pointer bg-gradient-to-r from-orange-500 to-pink-500 font-medium text-white hover:from-orange-600 hover:to-pink-600">
+        <Button
+          onClick={handleCreate}
+          disabled={loading}
+          className="w-full cursor-pointer bg-gradient-to-r from-orange-500 to-pink-500 font-medium text-white hover:from-orange-600 hover:to-pink-600"
+        >
+          {loading ? <Loader2 className="animate-spin" /> : <Music />}
           {loading ? "Creating..." : "Create"}
         </Button>
       </div>
