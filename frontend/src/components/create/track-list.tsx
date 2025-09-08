@@ -24,6 +24,8 @@ import {
 import { renameSong, setPublishedStatus } from "~/actions/song";
 import { RenameDialog } from "./rename-dialog";
 import { useRouter } from "next/navigation";
+import { usePlayerStore } from "~/stores/use-player-store";
+import { set } from "better-auth";
 
 export interface Tracks {
   id: string;
@@ -46,6 +48,7 @@ const TrackList = ({ tracks }: { tracks: Tracks[] }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadingTrackID, setLoadingTrackID] = useState<string | null>(null);
   const [trackToRename, setTrackToRename] = useState<null | Tracks>(null);
+  const setTrack = usePlayerStore((state) => state.setTrack);
   const router = useRouter();
 
   const filteredTracks = tracks.filter(
@@ -62,7 +65,15 @@ const TrackList = ({ tracks }: { tracks: Tracks[] }) => {
     const playUrl = await getSongUrl(track.id);
     setLoadingTrackID(null);
 
-    console.log(playUrl);
+    //console.log(playUrl);
+    setTrack({
+      id: track.id,
+      title: track.title,
+      url: playUrl,
+      artwork: track.thumbnailUrl,
+      prompt: track.prompt,
+      createdByUserName: track.createdByUserName,
+    });
   };
 
   const handleRefresh = async () => {
