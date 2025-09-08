@@ -1,13 +1,13 @@
 "use server";
+
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import React from "react";
 import { getPresignedUrls } from "~/actions/generation";
 import { auth } from "~/lib/auth";
 import { db } from "~/server/db";
 import TrackList from "./track-list";
 
-const TrackListFetcher = async () => {
+export default async function TrackListFetcher() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -17,14 +17,10 @@ const TrackListFetcher = async () => {
   }
 
   const songs = await db.song.findMany({
-    where: {
-      id: session?.user?.id,
-    },
+    where: { userId: session?.user?.id },
     include: {
       user: {
-        select: {
-          name: true,
-        },
+        select: { name: true },
       },
     },
     orderBy: {
@@ -32,7 +28,7 @@ const TrackListFetcher = async () => {
     },
   });
 
-  const songWithThumbnails = await Promise.all(
+  const songsWithThumbnails = await Promise.all(
     songs.map(async (song) => {
       const thumbnailUrl = song.thumbnailS3Key
         ? await getPresignedUrls(song.thumbnailS3Key)
@@ -56,7 +52,8 @@ const TrackListFetcher = async () => {
     }),
   );
 
-  return <TrackList tracks={songWithThumbnails} />;
-};
+  //console.log(songs);
+  //console.log(songsWithThumbnails);
 
-export default TrackListFetcher;
+  return <TrackList tracks={songsWithThumbnails} />;
+}

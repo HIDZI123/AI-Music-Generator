@@ -86,3 +86,39 @@ export async function getPresignedUrls(key: string) {
     expiresIn: 3600,
   });
 }
+
+export async function getSongUrl(songId: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("auth/sign-in");
+  }
+
+  const song = await db.song.findUniqueOrThrow({
+    where: {
+      id: songId,
+      OR: [{ userId: session?.user?.id }, { published: true }],
+      s3Key: {
+        not: null,
+      },
+    },
+    select: {
+      s3Key: true,
+    },
+  });
+
+  await db.song.update({
+    where: {
+      id: songId,
+    },
+    data: {
+      listenCount: {
+        increment: 1,
+      },
+    },
+  });
+
+  return await getPresignedUrls(song.s3Key!);
+}
