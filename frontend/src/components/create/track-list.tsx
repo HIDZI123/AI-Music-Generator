@@ -25,7 +25,6 @@ import { renameSong, setPublishedStatus } from "~/actions/song";
 import { RenameDialog } from "./rename-dialog";
 import { useRouter } from "next/navigation";
 import { usePlayerStore } from "~/stores/use-player-store";
-import { set } from "better-auth";
 
 export interface Tracks {
   id: string;
