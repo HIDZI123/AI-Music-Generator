@@ -191,7 +191,7 @@ export const generateSong = inngest.createFunction(
           data: {
             credits: {
               //decrement: 20,
-              decrement : 1,
+              decrement: 5,
             },
           },
         });
